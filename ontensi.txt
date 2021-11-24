@@ -1,0 +1,449 @@
+-- phpMyAdmin SQL Dump
+-- version 4.7.4
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1
+-- Generation Time: Jan 09, 2019 at 07:26 AM
+-- Server version: 10.1.30-MariaDB
+-- PHP Version: 7.2.1
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `coba`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `admin`
+--
+
+CREATE TABLE `admin` (
+  `id_admin` int(11) NOT NULL,
+  `username` varchar(100) NOT NULL,
+  `password` varchar(100) NOT NULL,
+  `nama_lengkap` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `admin`
+--
+
+INSERT INTO `admin` (`id_admin`, `username`, `password`, `nama_lengkap`) VALUES
+(1, 'katun', 'katun', 'katun Silungkang');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ongkir`
+--
+
+CREATE TABLE `ongkir` (
+  `id_ongkir` int(5) NOT NULL,
+  `nama_kota` varchar(100) NOT NULL,
+  `tarif` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `ongkir`
+--
+
+INSERT INTO `ongkir` (`id_ongkir`, `nama_kota`, `tarif`) VALUES
+(1, 'pematangsiantar', 20000),
+(2, 'medan', 25000),
+(3, 'Balige', 30000),
+(4, 'Laguboti', 35000);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `packing`
+--
+
+CREATE TABLE `packing` (
+  `id_packing` int(11) NOT NULL,
+  `jenis_packing` varchar(100) NOT NULL,
+  `tarif_packing` int(11) NOT NULL,
+  `foto_packing` varchar(200) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `packing`
+--
+
+INSERT INTO `packing` (`id_packing`, `jenis_packing`, `tarif_packing`, `foto_packing`) VALUES
+(1, 'Petak Pita', 30000, 'kado.jpg'),
+(2, 'Kotak Merah', 20000, 'kado2.jpg'),
+(4, 'Kado Petak Kuning', 15000, 'kado4.jpg');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `pelanggan`
+--
+
+CREATE TABLE `pelanggan` (
+  `id_pelanggan` int(11) NOT NULL,
+  `email_pelanggan` varchar(100) NOT NULL,
+  `password_pelanggan` varchar(50) NOT NULL,
+  `nama_pelanggan` varchar(100) NOT NULL,
+  `telepon_pelanggan` varchar(25) NOT NULL,
+  `alamat_pelanggan` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `pelanggan`
+--
+
+INSERT INTO `pelanggan` (`id_pelanggan`, `email_pelanggan`, `password_pelanggan`, `nama_pelanggan`, `telepon_pelanggan`, `alamat_pelanggan`) VALUES
+(1, 'cepo@gmail.com', 'cepo123', 'cepo123', '082361647111', ''),
+(5, 'nola@gmail.com', '', 'layla', '098765432', ''),
+(7, 'fandi@gmail.com', 'fandi123', 'fandi', '098765432', 'medan'),
+(8, 'naldo@gmail.com', 'naldo123', 'naldo', '09876543', 'medan'),
+(9, 'joni@gmail.com', 'joni123', 'joni', '0987654321', 'Parsoburan'),
+(10, 'mutiaramagdalena.simamora@yahoo.co.id', 'tia', 'Mutiara simamora', '5667790', 'kesehatan'),
+(11, 'Bella@gmail.com', 'bella123', 'Bella', '0812345678', 'Siborong-borong'),
+(12, 'selena@gmail.com', 'damnyou', 'selena gomez', '083145678', 'seoul'),
+(13, 'Delta@gmail.com', 'delta123', 'Delta', '', '');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `pembayaran`
+--
+
+CREATE TABLE `pembayaran` (
+  `id_pembayaran` int(11) NOT NULL,
+  `id_pembelian` int(11) NOT NULL,
+  `nama` varchar(255) NOT NULL,
+  `bank` varchar(255) NOT NULL,
+  `jumlah` int(11) NOT NULL,
+  `tanggal` date NOT NULL,
+  `bukti` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `pembayaran`
+--
+
+INSERT INTO `pembayaran` (`id_pembayaran`, `id_pembelian`, `nama`, `bank`, `jumlah`, `tanggal`, `bukti`) VALUES
+(5, 1, 'cepo', 'mandiri', 650000, '2018-12-11', '20181211074703bukti bayar.jpg'),
+(6, 30, 'jokon', 'mandiri', 3086000, '2018-12-11', '20181211135559daniel.jpg'),
+(7, 31, 'vfsf', 'vdfd', 2323, '2018-12-11', '20181211140146asdd.jpg'),
+(8, 30, 'joni', 'mandiri', 342524636, '2018-12-11', '20181211174334Bukti Pembayaran.jpg'),
+(9, 48, 'joni', 'mandiri', 90000, '2018-12-12', '20181212140458daniel.jpg'),
+(10, 62, 'Layla Hutasuhut', 'BRI', 0, '2018-12-14', '2018121409165320181211071536asdd.jpg'),
+(11, 63, 'Singap', 'BRI', 0, '2018-12-14', '20181214092554201812121527344x6 .jpg'),
+(12, 63, 'Singap', 'BRI', 0, '2018-12-14', '20181214092640201812121527344x6 .jpg'),
+(13, 66, 'Bella', 'BRI', 550000, '2018-12-14', '2018121415394820181211074703bukti bayar.jpg'),
+(14, 67, 'selena gomez', 'BRI', 200, '2018-12-14', '20181214154517201812121527344x6 .jpg'),
+(15, 30, 'Singap', 'BRI', 3, '2018-12-15', '201812151440232018121409165320181211071536asdd.jpg'),
+(16, 82, 'amsal', 'mandiri', 0, '2019-01-08', '20190108095916Capture.PNG');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `pembelian`
+--
+
+CREATE TABLE `pembelian` (
+  `id_pembelian` int(11) NOT NULL,
+  `id_pelanggan` int(11) NOT NULL,
+  `id_ongkir` int(11) NOT NULL,
+  `id_packing` int(11) NOT NULL,
+  `tanggal_pembelian` date NOT NULL,
+  `total_pembelian` int(11) NOT NULL,
+  `nama_kota` varchar(100) NOT NULL,
+  `tarif` int(11) NOT NULL,
+  `jenis_packing` varchar(100) NOT NULL,
+  `tarif_packing` int(11) NOT NULL,
+  `alamat_pengiriman` text NOT NULL,
+  `status_pembelian` varchar(100) NOT NULL DEFAULT 'pending',
+  `resi_pengiriman` int(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `pembelian`
+--
+
+INSERT INTO `pembelian` (`id_pembelian`, `id_pelanggan`, `id_ongkir`, `id_packing`, `tanggal_pembelian`, `total_pembelian`, `nama_kota`, `tarif`, `jenis_packing`, `tarif_packing`, `alamat_pengiriman`, `status_pembelian`, `resi_pengiriman`) VALUES
+(17, 1, 2, 0, '2018-12-10', 795400, '', 0, '', 0, '', 'pending', 0),
+(18, 1, 1, 0, '2018-12-10', 25000, '', 0, '', 0, '', 'pending', 0),
+(19, 1, 2, 0, '2018-12-10', 1290000, 'pematangsiantar', 20000, '', 0, '', 'pending', 0),
+(20, 2, 1, 0, '2018-12-10', 326000, 'medan', 25000, '', 0, '', 'pending', 0),
+(21, 1, 2, 0, '2018-12-10', 325000, 'medan', 25000, '', 0, '', 'pending', 0),
+(22, 1, 1, 0, '2018-12-10', 31000, 'pematangsiantar', 20000, '', 0, '', 'pending', 0),
+(23, 1, 1, 0, '2018-12-10', 325000, 'pematangsiantar', 20000, '', 0, 'jalan Bahkora II bawah ', 'pending', 0),
+(24, 1, 1, 0, '2018-12-10', 326000, 'pematangsiantar', 20000, '', 0, '$jalan bahkora II bawah pematangsiantar kodepos 11317056', 'pending', 0),
+(25, 1, 2, 0, '2018-12-10', 90000, 'medan', 25000, '', 0, '$asbckasbc a,sm ca,s c,asc savbasbv,asbvas v,a sv', 'pending', 0),
+(26, 1, 2, 0, '2018-12-11', 3030000, 'medan', 25000, '', 0, '$jalan Letkol ksafkjasbfbaldg,amd vmsd v,msd vm,sd ,mv', 'pending', 0),
+(27, 1, 1, 0, '2018-12-11', 320000, 'pematangsiantar', 20000, '', 0, '$zxcghjknl;klhgfdzdxfcvhbjnk', 'pending', 0),
+(28, 1, 2, 0, '2018-12-11', 330000, 'medan', 25000, '', 0, '$sdfghjklkjhgfdsdfghjkl;lkjhgf', 'pending', 0),
+(29, 1, 1, 0, '2018-12-11', 938000, 'pematangsiantar', 20000, '', 0, '$jalan marihat Landbow ', 'pending', 0),
+(30, 9, 1, 0, '2018-12-11', 3086000, 'pematangsiantar', 20000, '', 0, '$sdfhjgkhjlkjkhfdfsdgfhjhklgfdfghjk', 'sudah kirim data pembayaran', 0),
+(31, 9, 1, 0, '2018-12-11', 25000, 'pematangsiantar', 20000, '', 0, '$vsf', 'sudah kirim data pembayaran', 0),
+(32, 1, 2, 0, '2018-12-11', 30000, 'medan', 25000, '', 0, '$jdbsfksdbvs,bvkjsdbvkjdsbvljds', 'pending', 0),
+(33, 9, 2, 0, '2018-12-11', 45000, 'medan', 25000, '', 0, '$sgsdbgkjdsbgsgsdgdsgsdg', 'pending', 0),
+(34, 1, 1, 0, '2018-12-11', 920000, 'pematangsiantar', 20000, '', 0, '$sdgfjhjhkgfhdsfdgfhg', 'pending', 0),
+(35, 1, 2, 0, '2018-12-12', 3541000, 'medan', 25000, '', 0, '$zxfgvjkjljhgdsdfghjnkm', 'pending', 0),
+(36, 9, 1, 0, '2018-12-12', 60000, 'pematangsiantar', 20000, '', 0, '$htyhthtyhtyhtyht', 'pending', 0),
+(37, 1, 2, 0, '2018-12-12', 325000, 'medan', 25000, '', 0, '$zcxxzczxcxzczczxc', 'pending', 0),
+(38, 1, 2, 0, '2018-12-12', 325000, 'medan', 25000, '', 0, '$cghvvjvjhjhvhgchgxgfxfggff', 'pending', 0),
+(39, 9, 2, 0, '2018-12-12', 3625000, 'medan', 25000, '', 0, '$zdxfghjkl;lkjdsfghjkl;', 'pending', 0),
+(41, 9, 1, 0, '2018-12-12', 50000, '', 0, '', 0, 'mcz,xmc ,z c,zx c,mzx', 'pending', 0),
+(42, 9, 1, 0, '2018-12-12', 1820000, 'pematangsiantar', 20000, '', 0, 'mbasds,bfsdbfsdfbmsdbf', 'pending', 0),
+(43, 9, 1, 0, '2018-12-12', 18544000, 'pematangsiantar', 20000, 'bola', 65000, 'ssafsdbfdfsdfsdfsdf', 'pending', 0),
+(44, 9, 1, 0, '2018-12-12', 385000, 'pematangsiantar', 20000, 'bola', 65000, 'parapat i', 'pending', 0),
+(45, 9, 1, 0, '2018-12-12', 210000, 'pematangsiantar', 20000, 'bola', 65000, 'dksanfsdbfkjdsbfkj', 'pending', 0),
+(46, 9, 1, 0, '2018-12-12', 101000, 'pematangsiantar', 20000, 'segitiga', 76000, ',jbbhcfxgfdfxf', 'pending', 0),
+(47, 9, 2, 0, '2018-12-12', 866000, 'medan', 25000, 'segitiga', 76000, 'jbvnccbcbcm', 'pending', 0),
+(48, 9, 1, 0, '2018-12-12', 90000, 'pematangsiantar', 20000, 'bola', 65000, 'dfghjklkjhgfdzx', 'barang dikirim', 2147483647),
+(49, 9, 2, 0, '2018-12-12', 226000, 'medan', 25000, 'segitiga', 76000, 'gjhfgfghdgfdgfdgdgfdf', 'pending', 0),
+(50, 9, 2, 0, '2018-12-12', 390000, 'medan', 25000, 'bola', 65000, 'serdtfyg', 'pending', 0),
+(51, 1, 2, 0, '2018-12-13', 390000, 'medan', 25000, 'bola', 65000, 'tcyvubinj', 'pending', 0),
+(52, 10, 0, 0, '2018-12-13', 23000, '', 0, '', 0, '', 'pending', 0),
+(53, 10, 1, 0, '2018-12-13', 97000, 'pematangsiantar', 20000, 'bola', 65000, 'ghj', 'pending', 0),
+(54, 10, 1, 0, '2018-12-13', 107000, 'pematangsiantar', 20000, 'segitiga', 76000, 'HJJL', 'pending', 0),
+(55, 10, 2, 0, '2018-12-13', 100000, 'medan', 25000, 'bola', 65000, 'ghvjkhl', 'pending', 0),
+(56, 9, 1, 0, '2018-12-14', 940000, 'pematangsiantar', 20000, 'Kotak Merah', 20000, 'Bandung', 'pending', 0),
+(57, 9, 2, 0, '2018-12-14', 2345000, 'medan', 25000, 'Kotak Merah', 20000, 'Medan', 'pending', 0),
+(58, 1, 2, 0, '2018-12-14', 5055000, 'medan', 25000, 'Petak Pita', 30000, 'Balige\r\n', 'pending', 0),
+(59, 1, 2, 0, '2018-12-14', 345000, 'medan', 25000, 'Kotak Merah', 20000, 'Sitoluama', 'pending', 0),
+(60, 9, 3, 0, '2018-12-14', 430000, 'Balige', 30000, 'Kotak Merah', 20000, 'Balige', 'pending', 0),
+(61, 9, 1, 0, '2018-12-14', 200000, 'pematangsiantar', 20000, 'Petak Pita', 30000, 'ballige', 'pending', 0),
+(62, 9, 1, 0, '2018-12-14', 500000, 'pematangsiantar', 20000, 'Petak Pita', 30000, 'balige\r\n', 'barang dikirim', 0),
+(63, 9, 3, 0, '2018-12-14', 280000, 'Balige', 30000, 'Kotak Merah', 20000, '', 'sudah kirim data pembayaran', 0),
+(64, 9, 1, 0, '2018-12-14', 280000, 'pematangsiantar', 20000, 'Petak Pita', 30000, 'balige', 'pending', 0),
+(65, 9, 3, 0, '2018-12-14', 4560000, 'Balige', 30000, 'Petak Pita', 30000, 'balige', 'pending', 0),
+(66, 11, 4, 0, '2018-12-14', 550000, 'Laguboti', 35000, 'Kado Petak Kuning', 15000, 'IT Del', 'barang dikirim', 243567890),
+(67, 12, 1, 0, '2018-12-14', 1400000, 'pematangsiantar', 20000, 'Petak Pita', 30000, 'seoul', 'sudah kirim data pembayaran', 0),
+(68, 12, 4, 0, '2018-12-14', 510000, 'Laguboti', 35000, 'Kado Petak Kuning', 15000, 'Sitoluama', 'pending', 0),
+(69, 9, 1, 0, '2018-12-15', 470000, 'pematangsiantar', 20000, '', 0, 'sdfgh', 'pending', 0),
+(70, 9, 2, 0, '2018-12-15', 195000, 'medan', 25000, 'Kotak Merah', 20000, 'Helvetia, Medan', 'pending', 0),
+(71, 9, 2, 0, '2018-12-16', 205000, 'medan', 25000, 'Petak Pita', 30000, 'ewtrytu3tyju', 'pending', 0),
+(72, 9, 1, 0, '2018-12-16', 580000, 'pematangsiantar', 20000, 'Petak Pita', 30000, 'balige\r\n', 'pending', 0),
+(73, 9, 1, 0, '2018-12-17', 190000, 'pematangsiantar', 20000, 'Kotak Merah', 20000, 'balige', 'pending', 0),
+(74, 13, 4, 0, '2019-01-04', 300000, 'Laguboti', 35000, 'Kado Petak Kuning', 15000, 'Sitoluama', 'pending', 0),
+(75, 1, 3, 0, '2019-01-08', 590000, 'Balige', 30000, 'Petak Pita', 30000, 'Balige', 'pending', 0),
+(76, 1, 1, 0, '2019-01-08', 500000, 'pematangsiantar', 20000, 'Petak Pita', 30000, 'laguboti', 'pending', 0),
+(77, 1, 1, 0, '2019-01-08', 2440000, 'pematangsiantar', 20000, 'Kotak Merah', 20000, 'parluasan', 'pending', 0),
+(78, 1, 1, 0, '2019-01-08', 2290000, 'pematangsiantar', 20000, 'Kotak Merah', 20000, 'parluasan', 'pending', 0),
+(79, 1, 1, 0, '2019-01-08', 240000, 'pematangsiantar', 20000, 'Kotak Merah', 20000, 'parluasan', 'pending', 0),
+(80, 1, 2, 0, '2019-01-08', 240000, 'medan', 25000, 'Kado Petak Kuning', 15000, 'padangbulan', 'pending', 0),
+(81, 1, 1, 0, '2019-01-08', 500000, 'pematangsiantar', 20000, 'Petak Pita', 30000, 'siantar', 'pending', 0),
+(82, 9, 1, 0, '2019-01-08', 350000, 'pematangsiantar', 20000, 'Petak Pita', 30000, 'parluasan', 'lunas', 2147483647);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `pembelian_produk`
+--
+
+CREATE TABLE `pembelian_produk` (
+  `id_pembelian_produk` int(11) NOT NULL,
+  `id_pembelian` int(11) NOT NULL,
+  `id_produk` int(11) NOT NULL,
+  `jumlah` int(11) NOT NULL,
+  `nama` varchar(100) NOT NULL,
+  `harga` int(11) NOT NULL,
+  `berat` int(11) NOT NULL,
+  `subberat` int(11) NOT NULL,
+  `subharga` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `pembelian_produk`
+--
+
+INSERT INTO `pembelian_produk` (`id_pembelian_produk`, `id_pembelian`, `id_produk`, `jumlah`, `nama`, `harga`, `berat`, `subberat`, `subharga`) VALUES
+(51, 44, 1, 1, 'motif banagau', 300000, 0, 0, 300000),
+(55, 48, 3, 1, 'motif Sijobar', 5000, 0, 0, 5000),
+(56, 49, 7, 1, 'Motif Parapat', 125000, 0, 0, 125000),
+(57, 50, 1, 1, 'motif banagau', 300000, 0, 0, 300000),
+(58, 51, 1, 1, 'motif banagau', 300000, 0, 0, 300000),
+(59, 52, 4, 3, 'Motif Tarutung', 6000, 0, 0, 18000),
+(60, 52, 3, 1, 'motif Sijobar', 5000, 0, 0, 5000),
+(61, 53, 4, 2, 'Motif Tarutung', 6000, 0, 0, 12000),
+(62, 54, 3, 1, 'motif Sijobar', 5000, 0, 0, 5000),
+(63, 54, 4, 1, 'Motif Tarutung', 6000, 0, 0, 6000),
+(64, 55, 3, 2, 'motif Sijobar', 5000, 0, 0, 10000),
+(65, 56, 9, 2, 'Motif Iran-iran', 450000, 0, 0, 0),
+(66, 57, 5, 10, 'Motif Singap', 230000, 0, 0, 0),
+(67, 58, 6, 20, 'Motif Ruang', 250000, 0, 0, 5000000),
+(68, 59, 4, 1, 'Motif  Sijobang', 300000, 0, 0, 0),
+(69, 60, 5, 1, 'Motif Singap', 230000, 0, 0, 0),
+(70, 60, 8, 1, 'Angkar', 150000, 0, 0, 0),
+(71, 61, 8, 1, 'Angkar', 150000, 0, 0, 0),
+(72, 62, 9, 1, 'Motif Iran-iran', 450000, 0, 0, 0),
+(73, 63, 5, 1, 'Motif Singap', 230000, 0, 0, 0),
+(74, 64, 5, 1, 'Motif Singap', 230000, 0, 0, 0),
+(75, 65, 8, 15, 'Angkar', 150000, 0, 0, 0),
+(76, 65, 9, 5, 'Motif Iran-iran', 450000, 0, 0, 0),
+(77, 66, 8, 2, 'Angkar', 150000, 0, 0, 300000),
+(78, 66, 10, 1, 'Motif  Bunga Sungkit', 200000, 0, 0, 200000),
+(79, 67, 9, 3, 'Motif Iran-iran', 450000, 0, 0, 1350000),
+(80, 68, 5, 2, 'Motif Singap', 230000, 0, 0, 460000),
+(81, 69, 9, 1, 'Motif Iran-iran', 450000, 0, 0, 450000),
+(82, 70, 8, 1, 'Angkar', 150000, 0, 0, 150000),
+(83, 71, 8, 1, 'Angkar', 150000, 0, 0, 150000),
+(84, 72, 5, 1, 'Motif Singap', 230000, 0, 0, 230000),
+(85, 72, 4, 1, 'Motif  Sijobang', 300000, 0, 0, 300000),
+(86, 73, 8, 1, 'Angkar', 150000, 0, 0, 150000),
+(87, 74, 6, 1, 'Motif Ruang', 250000, 0, 0, 0),
+(88, 75, 4, 1, 'Motif  Sijobang', 300000, 0, 0, 0),
+(89, 75, 5, 1, 'Motif Singap', 230000, 0, 0, 0),
+(90, 76, 9, 1, 'Motif Iran-iran', 450000, 0, 0, 450000),
+(91, 77, 5, 5, 'Motif Singap', 230000, 0, 0, 0),
+(92, 77, 6, 5, 'Motif Ruang', 250000, 0, 0, 0),
+(93, 78, 9, 5, 'Motif Iran-iran', 450000, 0, 0, 0),
+(94, 79, 10, 1, 'Motif  Bunga Sungkit', 200000, 0, 0, 0),
+(95, 80, 10, 1, 'Motif  Bunga Sungkit', 200000, 0, 0, 0),
+(96, 81, 9, 1, 'Motif Iran-iran', 450000, 0, 0, 0),
+(97, 82, 4, 1, 'Motif  Sijobang', 300000, 0, 0, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `produk`
+--
+
+CREATE TABLE `produk` (
+  `id_produk` int(11) NOT NULL,
+  `nama_produk` varchar(100) NOT NULL,
+  `harga_produk` int(11) NOT NULL,
+  `berat` int(11) NOT NULL,
+  `foto_produk` varchar(100) NOT NULL,
+  `deskripsi_produk` text NOT NULL,
+  `stok_produk` int(5) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `produk`
+--
+
+INSERT INTO `produk` (`id_produk`, `nama_produk`, `harga_produk`, `berat`, `foto_produk`, `deskripsi_produk`, `stok_produk`) VALUES
+(4, 'Motif  Sijobang', 300000, 50, '1.jpg', 'kain yang bagus			', 0),
+(5, 'Motif Singap', 230000, 30, '5.jpg', 'Banyak yang sangat menyukainya 				', 94),
+(6, 'Motif Ruang', 250000, 400, 'aslkdas.jpg', 'Salah satu kain tenun yang bagus dan lembut			', 74),
+(8, 'Angkar', 150000, 50, 'background.jpg', '			kainnya sangat bagus dujaidkan sebagai bakal bajau 		', 3),
+(9, 'Motif Iran-iran', 450000, 50, 'FB_IMG_1543911539827.jpg', '			kain tenun yang lembut dan halus		', 11),
+(10, 'Motif  Bunga Sungkit', 200000, 30, 'FB_IMG_1543911542112.jpg', '			Kain yang sangat halus		', 22);
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `admin`
+--
+ALTER TABLE `admin`
+  ADD PRIMARY KEY (`id_admin`);
+
+--
+-- Indexes for table `ongkir`
+--
+ALTER TABLE `ongkir`
+  ADD PRIMARY KEY (`id_ongkir`);
+
+--
+-- Indexes for table `packing`
+--
+ALTER TABLE `packing`
+  ADD PRIMARY KEY (`id_packing`);
+
+--
+-- Indexes for table `pelanggan`
+--
+ALTER TABLE `pelanggan`
+  ADD PRIMARY KEY (`id_pelanggan`);
+
+--
+-- Indexes for table `pembayaran`
+--
+ALTER TABLE `pembayaran`
+  ADD PRIMARY KEY (`id_pembayaran`);
+
+--
+-- Indexes for table `pembelian`
+--
+ALTER TABLE `pembelian`
+  ADD PRIMARY KEY (`id_pembelian`);
+
+--
+-- Indexes for table `pembelian_produk`
+--
+ALTER TABLE `pembelian_produk`
+  ADD PRIMARY KEY (`id_pembelian_produk`);
+
+--
+-- Indexes for table `produk`
+--
+ALTER TABLE `produk`
+  ADD PRIMARY KEY (`id_produk`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `admin`
+--
+ALTER TABLE `admin`
+  MODIFY `id_admin` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `ongkir`
+--
+ALTER TABLE `ongkir`
+  MODIFY `id_ongkir` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `packing`
+--
+ALTER TABLE `packing`
+  MODIFY `id_packing` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `pelanggan`
+--
+ALTER TABLE `pelanggan`
+  MODIFY `id_pelanggan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+--
+-- AUTO_INCREMENT for table `pembayaran`
+--
+ALTER TABLE `pembayaran`
+  MODIFY `id_pembayaran` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
+--
+-- AUTO_INCREMENT for table `pembelian`
+--
+ALTER TABLE `pembelian`
+  MODIFY `id_pembelian` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=83;
+
+--
+-- AUTO_INCREMENT for table `pembelian_produk`
+--
+ALTER TABLE `pembelian_produk`
+  MODIFY `id_pembelian_produk` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=98;
+
+--
+-- AUTO_INCREMENT for table `produk`
+--
+ALTER TABLE `produk`
+  MODIFY `id_produk` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
