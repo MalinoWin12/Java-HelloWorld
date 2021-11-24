@@ -1,120 +1,32 @@
 <?php
-
 session_start();
 error_reporting(0);
 include('includes/config.php');
-// Code user Registration
-if(isset($_POST['submit']))
-{
-$name=$_POST['fullname'];
-$email=$_POST['emailid'];
-$contactno=$_POST['contactno'];
-$password=($_POST['password']);
-$salted = "loremipsum".$password."kepalkeren";
-$hashed = hash('sha256', $salted);
 
-$query=mysqli_query($con,"insert into users(name,email,contactno,password) values('$name','$email','$contactno','$hashed')");
-if($query)
+if(isset($_POST['change']))
 {
-	echo "<script>alert('Pendaftaran berhasil dilakukan.');</script>";
-}
-else{
-echo "<script>alert($query);</script>";
-}
-}
-if(isset($_POST['login']))
-{
-$email=$_POST['email'];
-$password=$_POST['password'];
-$salted = "loremipsum".$password."kepalkeren";
-$hashed = hash('sha256', $salted);
-$query=mysqli_query($con,"SELECT * FROM users WHERE email='$email' and password='$hashed'");
+   $email=$_POST['email'];
+    $contact=$_POST['contact'];
+    $password=md5($_POST['password']);
+$query=mysqli_query($con,"SELECT * FROM users WHERE email='$email' and contactno='$contact'");
 $num=mysqli_fetch_array($query);
 if($num>0)
 {
-$extra="my-cart.php";
-$_SESSION['login']=$_POST['email'];
-$_SESSION['id']=$num['id'];
-$_SESSION['username']=$num['name'];
-$uip=$_SERVER['REMOTE_ADDR'];
-$status=1;
-$log=mysqli_query($con,"insert into userlog(userEmail,userip,status) values('".$_SESSION['login']."','$uip','$status')");
+$extra="forgot-password.php";
+mysqli_query($con,"update users set password='$password' WHERE email='$email' and contactno='$contact' ");
 $host=$_SERVER['HTTP_HOST'];
 $uri=rtrim(dirname($_SERVER['PHP_SELF']),'/\\');
-
-require 'PHPMailer/src/Exception.php';
-require 'PHPMailer/src/PHPMailer.php';
-require 'PHPMailer/src/SMTP.php';
-
-$mail = new PHPMailer\PHPMailer\PHPMailer();
-
-$mail->SMTPDebug = 3;                               
-
-$mail->isSMTP();                                   
-
-$mail->Host = "shopping.pegiatkerja.com";
-
-$mail->SMTPAuth = true;                            
-
-$mail->Username = "shop@shopping.pegiatkerja.com";                 
-
-$mail->Password = "pagar0908";                           
-
-$mail->SMTPSecure = "ssl";                           
-
-$mail->Port = 465;                                   
-
- 
-
-$mail->From = "shop@shopping.pegiatkerja.com";
-
-$mail->FromName = "Shop";
-
- 
-
-$mail->addAddress("$email", "Permana");
-
- 
-
-$mail->isHTML(true);
-
- 
-
-$mail->Subject = "Shop";
-
-$mail->Body = "<i>Verivikasi Login anda <a  href ='https://shopping.pegiatkerja.com/my-cart.php'>Klik</a></i>";
-
-$mail->AltBody = "This is the plain text version of the email content";
-
- 
-
-if(!$mail->send()) 
-
-{
-    echo "Mailer Error: " . $mail->ErrorInfo;
-} 
-
-else 
-
-{
-    echo "Message has been sent successfully";
-
-}
-
-        header("location:verivikasi.php");
-        exit();
+header("location:http://$host$uri/$extra");
+$_SESSION['errmsg']="Password Changed Successfully";
+exit();
 }
 else
 {
-$extra="login.php";
-$email=$_POST['email'];
-$uip=$_SERVER['REMOTE_ADDR'];
-$status=0;
-$log=mysqli_query($con,"insert into userlog(userEmail,userip,status) values('$email','$uip','$status')");
+$extra="forgot-password.php";
 $host  = $_SERVER['HTTP_HOST'];
 $uri  = rtrim(dirname($_SERVER['PHP_SELF']),'/\\');
-header("location:verivikasi.php");
-$_SESSION['errmsg']="Invalid email id or Password";
+header("location:http://$host$uri/$extra");
+$_SESSION['errmsg']="Invalid email id or Contact no";
 exit();
 }
 }
@@ -135,7 +47,7 @@ exit();
 	    <meta name="keywords" content="MediaCenter, Template, eCommerce">
 	    <meta name="robots" content="all">
 
-	    <title>Shopping Portal | Signi-in | Signup</title>
+	    <title>Shopping Portal | Forgot Password</title>
 
 	    <!-- Bootstrap Core CSS -->
 	    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
@@ -182,24 +94,6 @@ return false;
 return true;
 }
 </script>
-    	<script>
-function userAvailability() {
-$("#loaderIcon").show();
-jQuery.ajax({
-url: "check_availability.php",
-data:'email='+$("#email").val(),
-type: "POST",
-success:function(data){
-$("#user-availability-status1").html(data);
-$("#loaderIcon").hide();
-},
-error:function (){}
-});
-}
-</script>
-
-
-
 	</head>
     <body class="cnt-home">
 	
@@ -224,7 +118,7 @@ error:function (){}
 		<div class="breadcrumb-inner">
 			<ul class="list-inline list-unstyled">
 				<li><a href="home.html">Home</a></li>
-				<li class='active'>Authentication</li>
+				<li class='active'>Forgot Password</li>
 			</ul>
 		</div><!-- /.breadcrumb-inner -->
 	</div><!-- /.container -->
@@ -236,9 +130,8 @@ error:function (){}
 			<div class="row">
 				<!-- Sign-in -->			
 <div class="col-md-6 col-sm-6 sign-in">
-	<h4 class="">sign in</h4>
-	<p class="">Hello, Welcome to your account.</p>
-	<form class="register-form outer-top-xs" method="post">
+	<h4 class="">Forgot password</h4>
+	<form class="register-form outer-top-xs" name="register" method="post">
 	<span style="color:red;" >
 <?php
 echo htmlentities($_SESSION['errmsg']);
@@ -249,42 +142,12 @@ echo htmlentities($_SESSION['errmsg']="");
 	</span>
 		<div class="form-group">
 		    <label class="info-title" for="exampleInputEmail1">Email Address <span>*</span></label>
-		    <input type="email" name="email" class="form-control unicase-form-control text-input" id="exampleInputEmail1" >
+		    <input type="email" name="email" class="form-control unicase-form-control text-input" id="exampleInputEmail1" required >
 		</div>
 	  	<div class="form-group">
-		    <label class="info-title" for="exampleInputPassword1">Password <span>*</span></label>
-		 <input type="password" name="password" class="form-control unicase-form-control text-input" id="exampleInputPassword1" >
+		    <label class="info-title" for="exampleInputPassword1">Contact no <span>*</span></label>
+		 <input type="text" name="contact" class="form-control unicase-form-control text-input" id="contact" required>
 		</div>
-		<div class="radio outer-xs">
-		  	<a href="forgot-password.php" class="forgot-password pull-right">Forgot your Password?</a>
-		</div>
-	  	<button type="submit" class="btn-upper btn btn-primary checkout-page-button" name="login">Login</button>
-	</form>					
-</div>
-<!-- Sign-in -->
-
-<!-- create a new account -->
-<div class="col-md-6 col-sm-6 create-new-account">
-	<h4 class="checkout-subtitle">create a new account</h4>
-	<p class="text title-tag-line">Create your own Shopping account.</p>
-	<form class="register-form outer-top-xs" role="form" method="post" name="register" onSubmit="return valid();">
-<div class="form-group">
-	    	<label class="info-title" for="fullname">Full Name <span>*</span></label>
-	    	<input type="text" class="form-control unicase-form-control text-input" id="fullname" name="fullname" required="required">
-	  	</div>
-
-
-		<div class="form-group">
-	    	<label class="info-title" for="exampleInputEmail2">Email Address <span>*</span></label>
-	    	<input type="email" class="form-control unicase-form-control text-input" id="email" onBlur="userAvailability()" name="emailid" required >
-	    	       <span id="user-availability-status1" style="font-size:12px;"></span>
-	  	</div>
-
-<div class="form-group">
-	    	<label class="info-title" for="contactno">Contact No. <span>*</span></label>
-	    	<input type="text" class="form-control unicase-form-control text-input" id="contactno" name="contactno" maxlength="10" required >
-	  	</div>
-
 <div class="form-group">
 	    	<label class="info-title" for="password">Password. <span>*</span></label>
 	    	<input type="password" class="form-control unicase-form-control text-input" id="password" name="password"  required >
@@ -296,21 +159,13 @@ echo htmlentities($_SESSION['errmsg']="");
 	  	</div>
 
 
-	  	<button type="submit" name="submit" class="btn-upper btn btn-primary checkout-page-button" id="submit">Sign Up</button>
-	</form>
-	<span class="checkout-subtitle outer-top-xs">Sign Up Today And You'll Be Able To :  </span>
-	<div class="checkbox">
-	  	<label class="checkbox">
-		  	Speed your way through the checkout.
-		</label>
-		<label class="checkbox">
-		Track your orders easily.
-		</label>
-		<label class="checkbox">
- Keep a record of all your purchases.
-		</label>
-	</div>
-</div>	
+		
+	  	<button type="submit" class="btn-upper btn btn-primary checkout-page-button" name="change">Change</button>
+	</form>					
+</div>
+<!-- Sign-in -->
+
+
 <!-- create a new account -->			</div><!-- /.row -->
 		</div>
 <?php include('includes/brands-slider.php');?>

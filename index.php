@@ -1,319 +1,565 @@
 <?php
 session_start();
- //koneksi ke database 
- include 'koneksi.php';
+error_reporting(0);
+include('includes/config.php');
+if(isset($_GET['action']) && $_GET['action']=="add"){
+	$id=intval($_GET['id']);
+	if(isset($_SESSION['cart'][$id])){
+		$_SESSION['cart'][$id]['quantity']++;
+	}else{
+		$sql_p="SELECT * FROM products WHERE id={$id}";
+		$query_p=mysqli_query($con,$sql_p);
+		if(mysqli_num_rows($query_p)!=0){
+			$row_p=mysqli_fetch_array($query_p);
+			$_SESSION['cart'][$row_p['id']]=array("quantity" => 1, "price" => $row_p['productPrice']);
+		
+		}else{
+			$message="Product ID is invalid";
+		}
+	}
+		echo "<script>alert('Product has been added to the cart')</script>";
+		echo "<script type='text/javascript'> document.location ='my-cart.php'; </script>";
+}
 
- ?>
 
-
+?>
 <!DOCTYPE html>
 <html lang="en">
 	<head>
+		<!-- Meta -->
 		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>FourStore</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+		<meta name="description" content="">
+		<meta name="author" content="">
+	    <meta name="keywords" content="MediaCenter, Template, eCommerce">
+	    <meta name="robots" content="all">
 
-		<link rel="icon" type="image/png" href="img/FOUR.png">
-		<link rel="stylesheet" href="css/febi.css">
+	    <title>FourStore</title>
 
-		<!-- Bootstrap-->
-		<link rel="stylesheet" href="css/animate.css">
-		<link rel="stylesheet" href="css/font-awesome.css">
-		<link rel="stylesheet" href="css/bootstrap.min.css" >
-		<link rel="stylesheet" href="css/jquery.bxslider.css">
+	    <!-- Bootstrap Core CSS -->
+	    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+	    
+	    <!-- Customizable CSS -->
+	    <link rel="stylesheet" href="assets/css/main.css">
+	    <link rel="stylesheet" href="assets/css/green.css">
+	    <link rel="stylesheet" href="assets/css/owl.carousel.css">
+		<link rel="stylesheet" href="assets/css/owl.transitions.css">
+		<!--<link rel="stylesheet" href="assets/css/owl.theme.css">-->
+		<link href="assets/css/lightbox.css" rel="stylesheet">
+		<link rel="stylesheet" href="assets/css/animate.min.css">
+		<link rel="stylesheet" href="assets/css/rateit.css">
+		<link rel="stylesheet" href="assets/css/bootstrap-select.min.css">
+
+		<!-- Demo Purpose Only. Should be removed in production -->
+		<link rel="stylesheet" href="assets/css/config.css">
+
+		<link href="assets/css/green.css" rel="alternate stylesheet" title="Green color">
+		<link href="assets/css/blue.css" rel="alternate stylesheet" title="Blue color">
+		<link href="assets/css/red.css" rel="alternate stylesheet" title="Red color">
+		<link href="assets/css/orange.css" rel="alternate stylesheet" title="Orange color">
+		<link href="assets/css/dark-green.css" rel="alternate stylesheet" title="Darkgreen color">
+		<link rel="stylesheet" href="assets/css/font-awesome.min.css">
+		<link href='http://fonts.googleapis.com/css?family=Roboto:300,400,500,700' rel='stylesheet' type='text/css'>
+		
+		<!-- Favicon -->
+		<link rel="shortcut icon" href="assets/images/favicon.ico">
+
 	</head>
-	<body>
-		<!-- Header-->
-		<?php
-			require_once(dirname(__FILE__).'/commons/header.php');
-		?>
-
-		<!---Menubar-->
-		<?php
-			require_once(dirname(__FILE__).'/commons/menubar.php');
-		?>
-<br>
-<div class="main-slider">
-			<div id="myCarousel" class="carousel slide" dataride="carousel">
-				<!-- Indicators -->
-				<ol class="carousel-indicators">
-					<li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-					<li data-target="#myCarousel" data-slide-to="1"></li>
-					<li data-target="#myCarousel" data-slide-to="2"></li>
-				</ol>
-				<!-- deklarasi carousel -->
-				<div class="carousel-inner" role="listbox">
-					<div class="item active">
-						<img src="img/sliderr/1.jpg" class="img-thumbnail">
-					<div class="wow fadeInUp" data-wow-offset="0" data-wow-delay="0.6s">
-						<div class="flex-caption">
-							<h3>Design Modern</h3>
-							<p>Design kain mengikuti era perkembangan</p>
-						</div>
-					</div>
-					</div>
-					<div class="item">
-						<img src="img/sliderr/2.jpg" class="img-thumbnail">
-					<div class="wow fadeInUp" data-wow-offset="0" data-wow-delay="0.6s">
-						<div class="flex-caption">
-							<h3>Bahan</h3>
-							<p>Bahan yang digunakan tidak mudah luntur dan kualitas baik</p>
-						</div>
-					</div>
-					</div>
-					<div class="item">
-						<img src="img/sliderr/3.jpg" class="img-thumbnail">
-					<div class="wow fadeInUp" data-wow-offset="0" data-wow-delay="0.6s">
-						<div class="flex-caption">
-							<h3>Harga</h3>
-							<p>Harga yang terjangkau namun hasil berkualitas</p>
-						</div>
-					</div>
-					</div>
-				</div>
-
-			</div>
-		</div>
-
-
-	</body>
-</html> 
-<br><br>
-   <section class="box">
-		<br><br>
-			<div class="container">
-				<div class="row">
-					<div class="col-md-6">
-						<div class="wow bounceIn" data-wow-offset="0" data-wow-delay="0.8s">
-							<div class="services">
-								<div class="icons">
-									<a href="about.php"></a>
-								</div>
-								<h4><b>Kenapa Kami Membuat OnTenSi?</b></h4>
-							<p>
-								Tenun adalah unsur budaya yang berasal dari keterampilan yang diturunkan dari generasi ke generasi. Begitu banyak potensi ekonomi yang bisa dikembangkan dengan tenun. 
-
-Perajin tenun yang selama ini hanya mengerjakan tenun yang penggunaannya terbatas pada kesempatan seremonial adat, diharapkan dapat mengembangkan desain motif yang lebih modern dan popular sehingga dapat mengembangkan pemasaran dan meluaskan pemakaian tenun kepada orang awam. 
-</p>
-
-			
+    <body class="cnt-home">
 	
-								</p>
-							</div>
-						</div>
-						<hr>
-					</div>
-					<div class="col-md-6">
-						<div class="wow bounceIn" data-wow-offset="0" data-wow-delay="1.2s">
-							<div class="services">
-							 <video width="500" height="250" controls><source src="img/produk/video.mp4" type="video/mp4"/></video>
-							
-							
-							</div>
-						</div>
-						<hr>
-					</div>
-				</div>
-			</div>
-		</section>
-  
-			</div>
-		</div>
-		<div class="wow fadeInUp" data-wow-offset="0" data-wow-delay="0.4s">
-		<section class="main-produk">
-			<div class="container">
-				<div class="row">
-				<center>
-				<h1>Produk Kain Tenun</h1>
-					<div class="row">
-			<?php 
-			$ambil = $koneksi->query("SELECT * FROM produk"); ?>
-			<?php
-				$counter = 0;
-				while($counter < 3) {
-					$perproduk = $ambil->fetch_assoc();
-			?>
-			<div class="col-md-4">
-				<br>
-				<div class="card">
-					 <a href="detail.php?id=<?php echo $perproduk['id_produk']; ?>"><img src="foto_produk/<?php echo $perproduk['foto_produk']; ?>" alt="">
-					<div class="caption">
-						<h3><?php echo $perproduk['nama_produk']; ?></h3>
-						<h4>Rp. <?php echo number_format($perproduk['harga_produk']); ?> 
-					    <h4>Stok : <?php echo $perproduk["stok_produk"]; ?></h4>
-						<a href="beli.php?id=<?php echo $perproduk['id_produk']; ?>"class="btn btn-primary btn-lg">Beli</a>
-						<a href="detail.php?id=<?php echo $perproduk['id_produk']; ?>" class="btn btn-success btn-lg">Detail</a>
-						<br><br>
-					</div>
-				</div>
-			</div>
-			
-			<?php $counter++;} ?>
+		
+	
+		<!-- ============================================== HEADER ============================================== -->
+<header class="header-style-1">
+<?php include('includes/top-header.php');?>
+<?php include('includes/main-header.php');?>
+<?php include('includes/menu-bar.php');?>
+</header>
 
-		</div>
-		<br>
-				</div>
-
-				<center><p><a href="produk.php"><button class="more">Produk Lain &raquo</button></a></p></center>
-			</div>
-		</section>
-		</div>
-		<hr>
-		<div class="wow fadeInUp" data-wow-offset="0" data-wow-delay="0.6s">
-
-		</div>
-		<hr>
-		<div class="wow fadeInUp" data-wow-offset="0" data-wow-delay="0.6s">
-		<section class="konten">
+<!-- ============================================== HEADER : END ============================================== -->
+<div class="body-content outer-top-xs" id="top-banner-and-menu">
 	<div class="container">
-		<center><h1>Tampilan Packing</h1>
-			<h3>Ayo packing Produk Yang kalian Beli  dengan bentuk - bentuk yang Lucu dan Menarik.
-
+		<div class="furniture-container homepage-container">
 		<div class="row">
-
-
-			<?php $ambil = $koneksi->query("SELECT * FROM packing"); ?>
-			<?php $counter = 0 ;
-				while($counter < 3)  {
-			$perproduk = $ambil->fetch_assoc(); 
-				?>
+		
+			<div class="col-xs-12 col-sm-12 col-md-3 sidebar">
+				<!-- ================================== TOP NAVIGATION ================================== -->
+	<?php include('includes/side-menu.php');?>
+<!-- ================================== TOP NAVIGATION : END ================================== -->
+			</div><!-- /.sidemenu-holder -->	
 			
-			<div class="col-md-4">
-				<br>
-				<div class="card">
-					<img src="foto_packing/<?php echo $perproduk['foto_packing']; ?>" alt="">
-					<div class="caption">
-						<h3><?php echo $perproduk['jenis_packing']; ?></h3>
-						<h5>Rp. <?php echo number_format($perproduk['tarif_packing']); ?></h5>
-						<br><br>
+			<div class="col-xs-12 col-sm-12 col-md-9 homebanner-holder">
+				<!-- ========================================== SECTION – HERO ========================================= -->
+			
+<div id="hero" class="homepage-slider3">
+	<div id="owl-main" class="owl-carousel owl-inner-nav owl-ui-sm">
+		<div class="full-width-slider">	
+			<div class="item" style="background-image: url(assets/images/sliders/slider1.png);">
+				<!-- /.container-fluid -->
+			</div><!-- /.item -->
+		</div><!-- /.full-width-slider -->
+	    
+	    <div class="full-width-slider">
+			<div class="item full-width-slider" style="background-image: url(assets/images/sliders/slider2.png);">
+			</div><!-- /.item -->
+		</div><!-- /.full-width-slider -->
+
+	</div><!-- /.owl-carousel -->
+</div>
+			
+<!-- ========================================= SECTION – HERO : END ========================================= -->	
+				<!-- ============================================== INFO BOXES ============================================== -->
+<div class="info-boxes wow fadeInUp">
+	<div class="info-boxes-inner">
+		<div class="row">
+			<div class="col-md-6 col-sm-4 col-lg-4">
+				<div class="info-box">
+					<div class="row">
+						<div class="col-xs-2">
+						     <i class="icon fa fa-dollar"></i>
+						</div>
+						<div class="col-xs-10">
+							<h4 class="info-box-heading green">money back</h4>
+						</div>
+					</div>	
+					<h6 class="text">30 Day Money Back Guarantee.</h6>
+				</div>
+			</div><!-- .col -->
+
+			<div class="hidden-md col-sm-4 col-lg-4">
+				<div class="info-box">
+					<div class="row">
+						<div class="col-xs-2">
+							<i class="icon fa fa-truck"></i>
+						</div>
+						<div class="col-xs-10">
+							<h4 class="info-box-heading orange">free shipping</h4>
+						</div>
+					</div>
+					<h6 class="text">free ship-on oder over Rp. 600.00</h6>
+				</div>
+			</div><!-- .col -->
+
+			<div class="col-md-6 col-sm-4 col-lg-4">
+				<div class="info-box">
+					<div class="row">
+						<div class="col-xs-2">
+							<i class="icon fa fa-gift"></i>
+						</div>
+						<div class="col-xs-10">
+							<h4 class="info-box-heading red">Special Sale</h4>
+						</div>
+					</div>
+					<h6 class="text">All items-sale up to 20% off </h6>	
+				</div>
+			</div><!-- .col -->
+		</div><!-- /.row -->
+	</div><!-- /.info-boxes-inner -->
+	
+</div><!-- /.info-boxes -->
+<!-- ============================================== INFO BOXES : END ============================================== -->		
+			</div><!-- /.homebanner-holder -->
+			
+		</div><!-- /.row -->
+
+		<!-- ============================================== SCROLL TABS ============================================== -->
+		<div id="product-tabs-slider" class="scroll-tabs inner-bottom-vs  wow fadeInUp">
+			<div class="more-info-tab clearfix">
+			   <h3 class="new-product-title pull-left">Featured Products</h3>
+				<ul class="nav nav-tabs nav-tab-line pull-right" id="new-products-1">
+					<li class="active"><a href="#all" data-toggle="tab">All</a></li>
+					<li><a href="#books" data-toggle="tab">Books</a></li>
+					<li><a href="#furniture" data-toggle="tab">Furniture</a></li>
+				</ul><!-- /.nav-tabs -->
+			</div>
+
+			<div class="tab-content outer-top-xs">
+				<div class="tab-pane in active" id="all">			
+					<div class="product-slider">
+						<div class="owl-carousel home-owl-carousel custom-carousel owl-theme" data-item="4">
+<?php
+$ret=mysqli_query($con,"select * from products");
+while ($row=mysqli_fetch_array($ret)) 
+{
+	# code...
+
+
+?>
+
+						    	
+		<div class="item item-carousel">
+			<div class="products">
+				
+	<div class="product">		
+		<div class="product-image">
+			<div class="image">
+				<a href="product-details.php?pid=<?php echo htmlentities($row['id']);?>">
+				<img  src="admin/productimages/<?php echo htmlentities($row['id']);?>/<?php echo htmlentities($row['productImage1']);?>" data-echo="admin/productimages/<?php echo htmlentities($row['id']);?>/<?php echo htmlentities($row['productImage1']);?>"  width="180" height="300" alt=""></a>
+			</div><!-- /.image -->			
+
+			                        		   
+		</div><!-- /.product-image -->
+			
+		
+		<div class="product-info text-left">
+			<h3 class="name"><a href="product-details.php?pid=<?php echo htmlentities($row['id']);?>"><?php echo htmlentities($row['productName']);?></a></h3>
+			<div class="rating rateit-small"></div>
+			<div class="description"></div>
+
+			<div class="product-price">	
+				<span class="price">
+					Rp.<?php echo htmlentities($row['productPrice']);?>			</span>
+										     <span class="price-before-discount">Rp.<?php echo htmlentities($row['productPriceBeforeDiscount']);?>	</span>
+									
+			</div><!-- /.product-price -->
+			
+		</div><!-- /.product-info -->
+		<?php if($row['productAvailability']=='In Stock'){?>
+					<div class="action"><a href="index.php?page=product&action=add&id=<?php echo $row['id']; ?>" class="lnk btn btn-primary">Add to Cart</a></div>
+				<?php } else {?>
+						<div class="action" style="color:red">Out of Stock</div>
+					<?php } ?>
+			</div><!-- /.product -->
+      
+			</div><!-- /.products -->
+		</div><!-- /.item -->
+	<?php } ?>
+
+			</div><!-- /.home-owl-carousel -->
+					</div><!-- /.product-slider -->
+				</div>
+
+
+
+
+	<div class="tab-pane" id="books">
+					<div class="product-slider">
+						<div class="owl-carousel home-owl-carousel custom-carousel owl-theme">
+		<?php
+$ret=mysqli_query($con,"select * from products where category=3");
+while ($row=mysqli_fetch_array($ret)) 
+{
+	# code...
+
+
+?>
+
+						    	
+		<div class="item item-carousel">
+			<div class="products">
+				
+	<div class="product">		
+		<div class="product-image">
+			<div class="image">
+				<a href="product-details.php?pid=<?php echo htmlentities($row['id']);?>">
+				<img  src="admin/productimages/<?php echo htmlentities($row['id']);?>/<?php echo htmlentities($row['productImage1']);?>" data-echo="admin/productimages/<?php echo htmlentities($row['id']);?>/<?php echo htmlentities($row['productImage1']);?>"  width="180" height="300" alt=""></a>
+			</div><!-- /.image -->			
+
+			                        		   
+		</div><!-- /.product-image -->
+			
+		
+		<div class="product-info text-left">
+			<h3 class="name"><a href="product-details.php?pid=<?php echo htmlentities($row['id']);?>"><?php echo htmlentities($row['productName']);?></a></h3>
+			<div class="rating rateit-small"></div>
+			<div class="description"></div>
+
+			<div class="product-price">	
+				<span class="price">
+					Rp. <?php echo htmlentities($row['productPrice']);?>			</span>
+										     <span class="price-before-discount">Rp.<?php echo htmlentities($row['productPriceBeforeDiscount']);?></span>
+									
+			</div><!-- /.product-price -->
+			
+		</div><!-- /.product-info -->
+				<?php if($row['productAvailability']=='In Stock'){?>
+					<div class="action"><a href="index.php?page=product&action=add&id=<?php echo $row['id']; ?>" class="lnk btn btn-primary">Add to Cart</a></div>
+				<?php } else {?>
+						<div class="action" style="color:red">Out of Stock</div>
+					<?php } ?>
+			</div><!-- /.product -->
+      
+			</div><!-- /.products -->
+		</div><!-- /.item -->
+	<?php } ?>
+	
+		
+								</div><!-- /.home-owl-carousel -->
+					</div><!-- /.product-slider -->
+				</div>
+
+
+
+
+
+
+		<div class="tab-pane" id="furniture">
+					<div class="product-slider">
+						<div class="owl-carousel home-owl-carousel custom-carousel owl-theme">
+		<?php
+$ret=mysqli_query($con,"select * from products where category=5");
+while ($row=mysqli_fetch_array($ret)) 
+{
+?>
+
+						    	
+		<div class="item item-carousel">
+			<div class="products">
+				
+	<div class="product">		
+		<div class="product-image">
+			<div class="image">
+				<a href="product-details.php?pid=<?php echo htmlentities($row['id']);?>">
+				<img  src="admin/productimages/<?php echo htmlentities($row['id']);?>/<?php echo htmlentities($row['productImage1']);?>" data-echo="admin/productimages/<?php echo htmlentities($row['id']);?>/<?php echo htmlentities($row['productImage1']);?>"  width="180" height="300" alt=""></a>
+			</div>		
+
+			                        		   
+		</div>
+			
+		
+		<div class="product-info text-left">
+			<h3 class="name"><a href="product-details.php?pid=<?php echo htmlentities($row['id']);?>"><?php echo htmlentities($row['productName']);?></a></h3>
+			<div class="rating rateit-small"></div>
+			<div class="description"></div>
+
+			<div class="product-price">	
+				<span class="price">
+					Rp.<?php echo htmlentities($row['productPrice']);?>			</span>
+										     <span class="price-before-discount">Rp.<?php echo htmlentities($row['productPriceBeforeDiscount']);?></span>
+									
+			</div>
+			
+		</div>
+				<?php if($row['productAvailability']=='In Stock'){?>
+					<div class="action"><a href="index.php?page=product&action=add&id=<?php echo $row['id']; ?>" class="lnk btn btn-primary">Add to Cart</a></div>
+				<?php } else {?>
+						<div class="action" style="color:red">Out of Stock</div>
+					<?php } ?>
+			</div>
+      
+			</div>
+		</div>
+	<?php } ?>
+	
+		
+								</div>
 					</div>
 				</div>
 			</div>
-			<?php $counter++; } ?>
-
 		</div>
-		</center>
-	</div>
-</section>
-</td>
-<hr>
-<section class="box">
-			<h4>MENGAPA MEMILIH KATUN SILUNGKANG?</b></h4>
-			<div class="container">
+		    
+
+         <!-- ============================================== TABS ============================================== -->
+			<div class="sections prod-slider-small outer-top-small">
 				<div class="row">
 					<div class="col-md-6">
-						<div class="wow bounceIn" data-wow-offset="0" data-wow-delay="0.8s">
-							<div class="services">
-								<div class="icons">
-									<a href="about.php"><i class="fa fa-home fa-2x" aria-hidden="true"></i></a>
-								</div>
-								<h4><b>INFORMASI</b></h4>
-								<p>
-									Merupakan salah satu home industri di daerah Sipirok yang memproduksi Kain Tenun Silungkang
-								</p>
-							</div>
-						</div>
-						<hr>
+	                   <section class="section">
+	                   	<h3 class="section-title">Smart Phones</h3>
+	                   	<div class="owl-carousel homepage-owl-carousel custom-carousel outer-top-xs owl-theme" data-item="2">
+	   
+<?php
+$ret=mysqli_query($con,"select * from products where category=4 and subCategory=4");
+while ($row=mysqli_fetch_array($ret)) 
+{
+?>
+
+
+
+		<div class="item item-carousel">
+			<div class="products">
+				
+	<div class="product">		
+		<div class="product-image">
+			<div class="image">
+				<a href="product-details.php?pid=<?php echo htmlentities($row['id']);?>"><img  src="admin/productimages/<?php echo htmlentities($row['id']);?>/<?php echo htmlentities($row['productImage1']);?>" data-echo="admin/productimages/<?php echo htmlentities($row['id']);?>/<?php echo htmlentities($row['productImage1']);?>"  width="180" height="300"></a>
+			</div><!-- /.image -->			                        		   
+		</div><!-- /.product-image -->
+			
+		
+		<div class="product-info text-left">
+			<h3 class="name"><a href="product-details.php?pid=<?php echo htmlentities($row['id']);?>"><?php echo htmlentities($row['productName']);?></a></h3>
+			<div class="rating rateit-small"></div>
+			<div class="description"></div>
+
+			<div class="product-price">	
+				<span class="price">
+					Rp. <?php echo htmlentities($row['productPrice']);?>			</span>
+										     <span class="price-before-discount">Rp.<?php echo htmlentities($row['productPriceBeforeDiscount']);?></span>
+									
+			</div>
+			
+		</div>
+				<?php if($row['productAvailability']=='In Stock'){?>
+					<div class="action"><a href="index.php?page=product&action=add&id=<?php echo $row['id']; ?>" class="lnk btn btn-primary">Add to Cart</a></div>
+				<?php } else {?>
+						<div class="action" style="color:red">Out of Stock</div>
+					<?php } ?>
+			</div>
+			</div>
+		</div>
+<?php }?>
+
+	
+			                   	</div>
+	                   </section>
 					</div>
 					<div class="col-md-6">
-						<div class="wow bounceIn" data-wow-offset="0" data-wow-delay="1.2s">
-							<div class="services">
-								<div class="icons">
-									<a href="packing.php"><i class="fa fa-gift fa-2x" aria-hidden="true"></i></a>
-								</div>
-								<h4><b>PACKING</b></h4>
-								<p>
-									Ayoo packing Produk kalian dengan bentuk -bentuk yang lucu dan menarikkk ayoo semua buruannn
-								</p>
-							</div>
-						</div>
-						<hr>
-					</div>
-					<div class="col-md-6">
-						<div class="wow bounceIn" data-wow-offset="0" data-wow-delay="1.2s">
-							<div class="services">
-								<div class="icons">
-									<a href="produk.php"><i class="fa fa-archive fa-2x" aria-hidden="true"></i></a>
-								</div>
-								<h4><b>PRODUK</b></h4>
-								<p>
-									Produk yang disediakan merupakan buatan asli masyarakat Siprok, Tapanuli Utara
-									yang kualitasnya terjamin.
-								</p>
-							</div>
-						</div>
-						<hr>
-					</div>
-					<div class="col-md-6">
-						<div class="wow bounceIn" data-wow-offset="0" data-wow-delay="1.2s">
-							<div class="services">
-								<div class="icons">
-									<a href="checkout.php"><i class="fa fa-truck fa-2x" aria-hidden="true"></i></a>
-								</div>
-								<h4><b>PENGIRIMAN</b></h4>
-								<p>
-									Menyediakan produk kain Tenun Silungkang yang siap untuk dikirimkan
-									keseluruh wilayah Indonesia.
-								</p>
-							</div>
-						</div>
-						<hr>
+						<section class="section">
+							<h3 class="section-title">Laptops</h3>
+		                   	<div class="owl-carousel homepage-owl-carousel custom-carousel outer-top-xs owl-theme" data-item="2">
+	<?php
+$ret=mysqli_query($con,"select * from products where category=4 and subCategory=6");
+while ($row=mysqli_fetch_array($ret)) 
+{
+?>
+
+
+
+		<div class="item item-carousel">
+			<div class="products">
+				
+	<div class="product">		
+		<div class="product-image">
+			<div class="image">
+				<a href="product-details.php?pid=<?php echo htmlentities($row['id']);?>"><img  src="admin/productimages/<?php echo htmlentities($row['id']);?>/<?php echo htmlentities($row['productImage1']);?>" data-echo="admin/productimages/<?php echo htmlentities($row['id']);?>/<?php echo htmlentities($row['productImage1']);?>"  width="300" height="300"></a>
+			</div><!-- /.image -->			                        		   
+		</div><!-- /.product-image -->
+			
+		
+		<div class="product-info text-left">
+			<h3 class="name"><a href="product-details.php?pid=<?php echo htmlentities($row['id']);?>"><?php echo htmlentities($row['productName']);?></a></h3>
+			<div class="rating rateit-small"></div>
+			<div class="description"></div>
+
+			<div class="product-price">	
+				<span class="price">
+					Rp .<?php echo htmlentities($row['productPrice']);?>			</span>
+										     <span class="price-before-discount">Rp.<?php echo htmlentities($row['productPriceBeforeDiscount']);?></span>
+									
+			</div>
+			
+		</div>
+				<?php if($row['productAvailability']=='In Stock'){?>
+					<div class="action"><a href="index.php?page=product&action=add&id=<?php echo $row['id']; ?>" class="lnk btn btn-primary">Add to Cart</a></div>
+				<?php } else {?>
+						<div class="action" style="color:red">Out of Stock</div>
+					<?php } ?>
+			</div>
+			</div>
+		</div>
+<?php }?>
+
+		
+	
+				                   	</div>
+	                   </section>
+
 					</div>
 				</div>
 			</div>
+		<!-- ============================================== TABS : END ============================================== -->
+
+		
+
+	<section class="section featured-product inner-xs wow fadeInUp">
+		<h3 class="section-title">Fashion</h3>
+		<div class="owl-carousel best-seller custom-carousel owl-theme outer-top-xs">
+			<?php
+$ret=mysqli_query($con,"select * from products where category=6");
+while ($row=mysqli_fetch_array($ret)) 
+{
+	# code...
+
+
+?>
+				<div class="item">
+					<div class="products">
+
+
+
+
+												<div class="product">
+							<div class="product-micro">
+								<div class="row product-micro-row">
+									<div class="col col-xs-6">
+										<div class="product-image">
+											<div class="image">
+												<a href="admin/productimages/<?php echo htmlentities($row['id']);?>/<?php echo htmlentities($row['productImage1']);?>" data-lightbox="image-1" data-title="<?php echo htmlentities($row['productName']);?>">
+													<img data-echo="admin/productimages/<?php echo htmlentities($row['id']);?>/<?php echo htmlentities($row['productImage1']);?>" width="170" height="174" alt="">
+													<div class="zoom-overlay"></div>
+												</a>					
+											</div><!-- /.image -->
+
+										</div><!-- /.product-image -->
+									</div><!-- /.col -->
+									<div class="col col-xs-6">
+										<div class="product-info">
+											<h3 class="name"><a href="product-details.php?pid=<?php echo htmlentities($row['id']);?>"><?php echo htmlentities($row['productName']);?></a></h3>
+											<div class="rating rateit-small"></div>
+											<div class="product-price">	
+												<span class="price">
+													Rp. <?php echo htmlentities($row['productPrice']);?>
+												</span>
+
+											</div><!-- /.product-price -->
+										<?php if($row['productAvailability']=='In Stock'){?>
+					<div class="action"><a href="index.php?page=product&action=add&id=<?php echo $row['id']; ?>" class="lnk btn btn-primary">Add to Cart</a></div>
+				<?php } else {?>
+						<div class="action" style="color:red">Out of Stock</div>
+					<?php } ?>
+										</div>
+									</div><!-- /.col -->
+								</div><!-- /.product-micro-row -->
+							</div><!-- /.product-micro -->
+						</div>
+
+
+											</div>
+				</div><?php } ?>
+							</div>
 		</section>
-		<!-- Footer-->
-		<footer>
-			<div class="inner-footer">
-				<div class="container">
-					<div class="row">
-						<div class="col-md-4 f-about">
-							<h1>Katun Silungkang</h1>
-							<p>Sebuah Website yang dibangun yang bertujuan untuk mempromosikan produk Kain Tenun Silungkang
-							agar dapat lebih dikenal oleh seluruh masyarakat diseluruh Indonesia.<br></p>
+<?php include('includes/brands-slider.php');?>
+</div>
+</div>
+<?php include('includes/footer.php');?>
+	
+	<script src="assets/js/jquery-1.11.1.min.js"></script>
+	
+	<script src="assets/js/bootstrap.min.js"></script>
+	
+	<script src="assets/js/bootstrap-hover-dropdown.min.js"></script>
+	<script src="assets/js/owl.carousel.min.js"></script>
+	
+	<script src="assets/js/echo.min.js"></script>
+	<script src="assets/js/jquery.easing-1.3.min.js"></script>
+	<script src="assets/js/bootstrap-slider.min.js"></script>
+    <script src="assets/js/jquery.rateit.min.js"></script>
+    <script type="text/javascript" src="assets/js/lightbox.min.js"></script>
+    <script src="assets/js/bootstrap-select.min.js"></script>
+    <script src="assets/js/wow.min.js"></script>
+	<script src="assets/js/scripts.js"></script>
 
-						</div>
-						<div class="col-md-4 l-posts">
-							<h3 class="widgetheading">Kunjungi</h3>
-								<ul>
-									<li><a href="http://www.del.ac.id/">Institut Teknologi Del</a></li>
-									<li><a href="about.php"> Usaha Tenun Irsan</a></li>
-								</ul>
-						</div>
-						<div class="col-md-4 f-contact">
-							<h3 class="widgetheading">Hubungi Kami</h3>
-							<a href="#"><p><i class="fa fa-envelope"></i> nur_Lina@gmail.com</p></a>
-							<p><i class="fa fa-phone"></i>  +6282249719766</p>
-							<p><i class="fa fa-home"></i> Usaha Tenun Irsan  |  Kode POS 22411
-								Sipirok, Tapanuli Selatan, Sumatera Utara,  <br>
-								INDONESIA</p>
-						</div>
-					</div>
-				</div>
-			</div>
+	<!-- For demo purposes – can be removed on production -->
+	
+	<script src="switchstylesheet/switchstylesheet.js"></script>
+	
+	<script>
+		$(document).ready(function(){ 
+			$(".changecolor").switchstylesheet( { seperator:"color"} );
+			$('.show-theme-options').click(function(){
+				$(this).parent().toggleClass('open');
+				return false;
+			});
+		});
 
-		<?php
-			require_once(dirname(__FILE__).'/commons/footer.php');
-		?>
+		$(window).bind("load", function() {
+		   $('.show-theme-options').delay(2000).trigger('click');
+		});
+	</script>
+	<!-- For demo purposes – can be removed on production : End -->
 
-		<!-- Scroll Up Button -->
-		<a href="#" class="scrollup"><i class="fa fa-angle-up fa-2x active"></i></a>
+	
 
-		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-		<script src="js/jquery-3.1.1.min.js"></script>
-		<!-- Include all compiled plugins (below), or include individual files as needed -->
-		<script src="js/bootstrap.min.js"></script>
-		<script src="js/jquery.singlePageNav.js"></script>
-		<script src="js/jquery.flexslider.js"></script>
-		<script src="js/jquery.appear.js"></script>
-		<script src="js/custom.js"></script>
-		<script src="js/wow.min.js"></script>
-		<script>wow = new WOW({}).init();</script>
-		<script>
-			$('.carousel').carousel({			//Waktu Carousel
-				interval: 3000
-			})
-		</script>
 </body>
 </html>
